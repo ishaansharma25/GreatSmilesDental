@@ -1245,9 +1245,8 @@ Provisional and fixed snap-in prosthesis</strong></span>
             <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">Copyright &copy; 2026 All Rights Reserved Great Smiles Dental.</p>
                 <div class="flex space-x-6">
-                    <a href="#openPolicy" class="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
-                    <!-- <a href="/terms-of-service/" class="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a> -->
-                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Mapa del Sitio</a>
+                    <a href="#policyModal" class="text-gray-400 hover:text-white text-sm transition-colors policy-modal-trigger">Privacy Policy</a>
+                    <a href="#policyModal" class="text-gray-400 hover:text-white text-sm transition-colors policy-modal-trigger">Terms &amp; Conditions</a>
                 </div>
             </div>
         </div>
@@ -1405,7 +1404,7 @@ Provisional and fixed snap-in prosthesis</strong></span>
                 margin-top:6px; 
             }
     
-            /* Privacy Policy Modal Styles */
+            /* Combined privacy policy and terms modal */
             .policy-modal {
                 display: none;
                 position: fixed;
@@ -1505,12 +1504,12 @@ Provisional and fixed snap-in prosthesis</strong></span>
                                 <h2 style="font-size:16px; margin:0 0 10px">Privacy and SMS Consent</h2>
                                 <p style="font-size:13px;">
                                     We value your privacy. Review our
-                                    <a href="#" id="openPolicy" style="color: #0b79d0;">full Privacy Policy</a>.
+                                    <a href="#policyModal" class="policy-modal-trigger" style="color: #0b79d0;">Privacy Policy and Terms &amp; Conditions</a>.
                                 </p>
                                 <div style="margin-top:12px;">
                                     <label>
                                         <input type="checkbox" id="agreePrivacy" name="agreePrivacy" required>
-                                        I accept and agree to the Great Smiles Dental Privacy Policy. <span class="intake-required">*</span>
+                                        I accept and agree to the Great Smiles Dental Privacy Policy and Terms &amp; Conditions. <span class="intake-required">*</span>
                                     </label>
                                 </div>
     
@@ -1518,7 +1517,7 @@ Provisional and fixed snap-in prosthesis</strong></span>
                                     <label style="display:block; font-weight:600; margin-bottom:6px;">Promotional and Appointment SMS (Optional)</label>
                                     <label>
                                         <input type="checkbox" id="smsConsent" name="smsConsent" value="yes">
-                                        Yes — I agree to receive appointment reminders and promotional text messages. Message and data rates may apply. Reply STOP to cancel.
+                                        Yes — I agree to receive appointment reminders and promotional text messages. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help.
                                     </label>
                                 </div>
     
@@ -1536,16 +1535,17 @@ Provisional and fixed snap-in prosthesis</strong></span>
         <div id="policyModal" class="policy-modal">
             <div class="policy-modal-content">
                 <span class="policy-modal-close">&times;</span>
-                <h1 class=".intake-h1" style="color: #0b79d0;">Great Smiles Dental Privacy Policy</h1>
-                <br>
-                <p><strong>1. Information We Collect:</strong> Name, contact details, date of birth, insurance details, medical history, and other information you provide for treatment.</p>
-                <p><strong>2. How We Use Your Data:</strong> To schedule appointments, provide care, process billing and insurance, send appointment reminders, and comply with healthcare regulations.</p>
-                <p><strong>3. SMS Consent:</strong> With your authorization, we may send appointment reminders or promotional offers by text message. Message frequency varies. Reply STOP to cancel at any time.</p>
-                <p><strong>4. Sharing Data:</strong> We do not sell your information. We only share it with staff, insurance companies, laboratories, or legal authorities as necessary.</p>
-                <p><strong>5. Data Retention:</strong> Records are stored securely and retained as required by law and dental practice guidelines.</p>
-                <p><strong>6. Your Rights:</strong> You may request access to, correction of, or deletion of your information where legally permitted. Contact connect@greatsmilesdental.com.</p>
-                <p><strong>7. Security:</strong> We use safeguards to protect your personal information from unauthorized access, loss, or misuse.</p>
-                <p><strong>8. Changes:</strong> We may update this policy occasionally and will post changes on our website.</p>
+                <h1 class="intake-h1" style="color: #0b79d0;">Great Smiles Dental Privacy Policy and Terms &amp; Conditions</h1>
+                <p><strong>1. Information We Collect:</strong> We may collect your name, contact details, date of birth, insurance details, medical history, and other information you provide for treatment or appointment coordination.</p>
+                <p><strong>2. How We Use Your Data:</strong> We use information to schedule appointments, provide care, process billing and insurance, respond to inquiries, send requested reminders, and comply with healthcare regulations.</p>
+                <p><strong>3. SMS Program and A2P Consent:</strong> If you opt in, Great Smiles Dental may send appointment reminders, care-related updates, and promotional messages by SMS. Message frequency varies. Message and data rates may apply. Consent is not a condition of purchasing goods or services. Reply STOP to opt out or HELP for help. You can also contact connect@greatsmilesdental.com. Carriers are not liable for delayed or undelivered messages.</p>
+                <p><strong>4. SMS Privacy:</strong> We do not sell or share your phone number or SMS opt-in information with third parties for their own marketing purposes. We may share information with service providers that help us operate our communications, subject to confidentiality obligations.</p>
+                <p><strong>5. Sharing Data:</strong> We do not sell your personal information. We may share it with authorized staff, healthcare providers, insurance companies, laboratories, service providers, or legal authorities as necessary to provide services or comply with the law.</p>
+                <p><strong>6. Data Retention and Security:</strong> Records are stored securely and retained as required by law and dental practice guidelines. We use reasonable safeguards to protect personal information from unauthorized access, loss, or misuse.</p>
+                <p><strong>7. Your Rights:</strong> You may request access to or correction of your information where legally permitted. Contact connect@greatsmilesdental.com.</p>
+                <p><strong>8. Terms of Use:</strong> Website content is provided for general educational purposes and does not replace professional dental advice. Treatment availability, pricing, results, and eligibility require an individual evaluation. You agree to use this website lawfully and not to interfere with its operation.</p>
+                <p><strong>9. Appointment Requests:</strong> Submitting a request does not guarantee an appointment. Our team will contact you to confirm availability and details.</p>
+                <p><strong>10. Changes:</strong> We may update this policy and these terms occasionally and will post changes on this website.</p>
             </div>
         </div>
     
@@ -1666,17 +1666,16 @@ form1?.addEventListener('submit', async (e) => {
             const intakeModal = document.getElementById("intakeModal");
             const closeIntakeBtn = document.querySelector(".intake-modal-close");
             
-            // Modal logic for privacy policy
+            // Open the combined privacy policy and terms modal.
             const policyModal = document.getElementById("policyModal");
-            const openPolicyBtn = document.getElementById("openPolicy");
+            const policyModalTriggers = document.querySelectorAll(".policy-modal-trigger");
             const closePolicyBtn = document.querySelector(".policy-modal-close");
     
-            // Open privacy policy modal
-            if (openPolicyBtn) {
-                openPolicyBtn.addEventListener('click', function(e){ 
+            if (policyModalTriggers.length > 0) {
+                policyModalTriggers.forEach(trigger => trigger.addEventListener('click', function(e){
                     e.preventDefault(); 
                     policyModal.style.display = "flex"; 
-                });
+                }));
             }
             
             // Close privacy policy modal
