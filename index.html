@@ -360,7 +360,13 @@ input[type="radio"] {
       bindRadioGroup('creditScore', 'creditScore', 'step8Error');
       bindRadioGroup('altPayment', 'altPayment', 'step9Error');
 
-      // Next button handlers
+            function openLeadConnectorChat() {
+                if (window.LC_API && typeof window.LC_API.open_chat_window === 'function') {
+                    window.LC_API.open_chat_window();
+                }
+            }
+
+            // Next button handlers
       document.getElementById('nextStep1')?.addEventListener('click', ()=>{
         if (!answers.condition) { document.getElementById('step1Error')?.classList.remove('hidden'); return; }
         showStep(2);
@@ -387,18 +393,18 @@ input[type="radio"] {
       });
       document.getElementById('nextStep7')?.addEventListener('click', ()=>{
         if (!answers.paymentPlanInterest) { document.getElementById('step7Error')?.classList.remove('hidden'); return; }
-        if (answers.paymentPlanInterest.includes('No')) { showStep(11); }
+        if (answers.paymentPlanInterest.includes('No')) { openLeadConnectorChat(); }
         else { showStep(8); }
       });
       document.getElementById('nextStep8')?.addEventListener('click', ()=>{
         if (!answers.creditScore) { document.getElementById('step8Error')?.classList.remove('hidden'); return; }
         if (answers.creditScore === 'Under 500' || answers.creditScore === '501-600') { showStep(9); }
-        else { showStep(11); }
+        else { openLeadConnectorChat(); }
       });
       document.getElementById('nextStep9')?.addEventListener('click', ()=>{
         if (!answers.altPayment) { document.getElementById('step9Error')?.classList.remove('hidden'); return; }
         if (answers.altPayment === "No, I don't") { showStep(10); }
-        else { showStep(11); }
+        else { openLeadConnectorChat(); }
       });
 
       // Previous buttons
@@ -416,96 +422,6 @@ input[type="radio"] {
       });
 
       document.getElementById('resetFormBtn')?.addEventListener('click', ()=> location.reload());
-
-      // Submit & validation
-      const submitBtn = document.getElementById('submitQuestionnaire');
-      const fullName = document.getElementById('fullName');
-      const smsConsent = document.getElementById('smsConsent');
-      const nameErr = document.getElementById('nameError');
-      const smsErr = document.getElementById('smsError');
-      const successDiv = document.getElementById('formSuccessMessage');
-
-      const submitBtn1 = document.getElementById('intakeForm');
-
-       (submitBtn)?.addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        console.log("COde here 1")
-        
-        // Get values
-        const fullName = document.getElementById('fullName')?.value.trim();
-        const smsChecked = document.getElementById('smsConsent')?.checked;
-        
-        // Validate
-        let valid = true;
-        if (!fullName) {
-            document.getElementById('nameError')?.classList.remove('hidden');
-            valid = false;
-        } else {
-            document.getElementById('nameError')?.classList.add('hidden');
-        }
-
-
-        console.log("COde here 2")
-        
-        if (!smsChecked) {
-            document.getElementById('smsError')?.classList.remove('hidden');
-            valid = false;
-        } else {
-            document.getElementById('smsError')?.classList.add('hidden');
-        }
-        
-        if (!valid) return;
-        
-        // Submit to Make webhook
-        submitBtn.disabled = true;
-            submitBtn.innerText = 'Sending...';
-
-
-        console.log("COde here 3")
-        
-        const payload = {
-            contact_id: `GreatSmiles_${Date.now()}`,
-            full_name: fullName,
-            first_name: fullName.split(' ')[0],
-            sms_consent: true,
-            condition: answers.condition,
-            confidence: answers.confidence,
-            pain: answers.pain,
-            missingDuration: answers.missingDuration,
-            dentalSolution: answers.dentalSolution,
-            coSigner: answers.coSigner,
-            paymentPlanInterest: answers.paymentPlanInterest,
-            creditScore: answers.creditScore,
-            altPayment: answers.altPayment,
-            source: "Great Smiles Dental Quiz",
-            tags:['Great Smiles Dental'],
-            timestamp: new Date().toISOString()
-        };
-        
-        try {
-            const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/cjgz95lr53v19vof0qfbr67fe3i7kce5';
-            const res = await fetch(MAKE_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-            });
-            
-            if (res.ok) {
-            successDiv.classList.remove('hidden');
-            successDiv.innerHTML = `✅ Thank you, ${fullName.split(' ')[0]}! We will contact you soon.`;
-            submitBtn.innerText = "✓ SENT";
-            } else {
-            alert("There was an error sending your information. Please try again.");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "ENVIAR →";
-            }
-        } catch (err) {
-            alert("Network error. Please try again.");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "SEND →";
-        }
-        });
 
       // start
       showStep(1);
@@ -1465,72 +1381,6 @@ Provisional and fixed snap-in prosthesis</strong></span>
     <body class="bg-gray-50 min-h-screen font-sans antialiased">
         <!-- Your existing HTML content here -->
         
-        <!-- New Patient Intake Form Modal -->
-        <div id="intakeModal" class="intake-modal">
-            <div class="intake-modal-content">
-                <span class="intake-modal-close">&times;</span>
-                <div class="intake-container">
-                    <div class="intake-card">
-                        <h1 class="intake-h1">Great Smiles Dental — New Patient Intake</h1>
-                        <p class="intake-lead">Welcome! Complete this form so we can prepare for your first visit. Fields marked with <span class="intake-required">*</span> are required.</p>
-    
-                        <form id="intakeForm" method="POST" novalidate>
-                            <input type="text" name="website_hp" id="website_hp" style="display:none" tabindex="-1" autocomplete="off">
-    
-                            <!-- Patient info -->
-                            <div class="intake-card" style="margin-bottom:12px;">
-                                <h2 style="font-size:16px; margin:0 0 10px">Patient Information</h2>
-                                <div class="intake-grid">
-                                    <div><label for="firstName" class="intake-label">First Name <span class="intake-required">*</span></label><input id="firstName" name="firstName" type="text" class="intake-input" required></div>
-                                    <div><label for="lastName" class="intake-label">Last Name <span class="intake-required">*</span></label><input id="lastName" name="lastName" type="text" class="intake-input" required></div>
-                                    <div><label for="dob" class="intake-label">Date of Birth</label><input id="dob" name="dob" type="date" class="intake-input"></div>
-                                    <div><label for="email" class="intake-label">Email</label><input id="email" name="email" type="email" class="intake-input"></div>
-                                    <div><label for="preferredContact" class="intake-label">Preferred Contact</label>
-                                        <select id="preferredContact" name="preferredContact" class="intake-select">
-                                            <option value="phone">Phone</option>
-                                            <option value="sms">SMS</option>
-                                            <option value="email">Email</option>
-                                        </select>
-                                    </div>
-                                    <div class="intake-col-1"><label for="address" class="intake-label">Address</label><input id="address" name="address" type="text" class="intake-input"></div>
-                                    <div><label for="insurance" class="intake-label">Insurance Provider</label><input id="insurance" name="insurance" type="text" class="intake-input"></div>
-                                    <div><label for="policyNo" class="intake-label">Policy Number / Member ID</label><input id="policyNo" name="policyNo" type="text" class="intake-input"></div>
-                                    <div class="intake-col-1"><label for="reason" class="intake-label">Reason for Visit / Notes</label><textarea id="reason" name="reason" class="intake-textarea"></textarea></div>
-                                </div>
-                            </div>
-    
-                            <!-- Privacy -->
-                            <div class="intake-card">
-                                <h2 style="font-size:16px; margin:0 0 10px">Privacy and SMS Consent</h2>
-                                <p style="font-size:13px;">
-                                    We value your privacy. Review our
-                                    <a href="#policyModal" class="policy-modal-trigger" style="color: #0b79d0;">Privacy Policy and Terms &amp; Conditions</a>.
-                                </p>
-                                <div style="margin-top:12px;">
-                                    <label>
-                                        <input type="checkbox" id="agreePrivacy" name="agreePrivacy" required>
-                                        I accept and agree to the Great Smiles Dental Privacy Policy and Terms &amp; Conditions. <span class="intake-required">*</span>
-                                    </label>
-                                </div>
-    
-                                <div style="margin-top:10px;">
-                                    <label style="display:block; font-weight:600; margin-bottom:6px;">Promotional and Appointment SMS (Optional)</label>
-                                    <label>
-                                        <input type="checkbox" id="smsConsent" name="smsConsent" value="yes">
-                                        Yes — I agree to receive appointment reminders and promotional text messages. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help.
-                                    </label>
-                                </div>
-    
-                                <div class="intake-error" id="formError">Complete the required fields and accept the Privacy Policy.</div>
-                                <div class="intake-actions"><button id="intake-button" class="intake-button" type="submit">Request Appointment</button></div>
-                            </div>
-                        </form>
-                    </div>
-                    <p class="intake-muted" style="text-align:center;">Questions? Email <a href="mailto:connect@greatsmilesdental.com">connect@greatsmilesdental.com</a></p>
-                </div>
-            </div>
-        </div>
-    
         <!-- Privacy Policy Modal -->
         <div id="policyModal" class="policy-modal">
             <div class="policy-modal-content">
@@ -1550,9 +1400,6 @@ Provisional and fixed snap-in prosthesis</strong></span>
         </div>
     
         <script>
-
-            const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/cjgz95lr53v19vof0qfbr67fe3i7kce5';
-
 
 const errorEl = document.getElementById('formError');
 const submitBtn = document.getElementById('intake-button');
@@ -1598,7 +1445,6 @@ form1?.addEventListener('submit', async (e) => {
   const reason = document.getElementById('reason').value;
 
   const agreePrivacy = document.getElementById('agreePrivacy');
-  const smsConsent = document.getElementById('smsConsent');
 
   // validation
   if (!firstName || !lastName) {
@@ -1627,7 +1473,6 @@ form1?.addEventListener('submit', async (e) => {
     policy_no: policyNo,
     reason,
 
-    sms_consent: smsConsent.checked,
     privacy_consent: true,
 
     tags: ["Great Smiles Dental In-House"],
